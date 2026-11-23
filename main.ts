@@ -345,7 +345,7 @@ const REGIONS = [
     icon: 'stepped',
     stories: [
       '49ers rout Vikings 35–10 in Mexico City',
-      'Brazil storm toll rises to five, Tupanciretã',
+      'Brazil storm toll rises to five, Tupancireta',
       'Magnitude 5.2 quake jolts central Peru',
       'Six killed in Chiloé head-on crash, Chile',
     ],
@@ -464,9 +464,14 @@ for (const region of REGIONS) {
 // Footer
 fillRect(24, 954, W - 48, 2, NAVY);
 drawTextCentered('All events: Sunday 22 November 2026', W / 2, 962, 2, INK);
-let footerGap = 1;
-if (textWidth(SOURCES, 1, footerGap) > W - 24) footerGap = 0;
-drawTextCentered(SOURCES, W / 2, 982, 1, INK, footerGap);
+// Sources footer in two lines at scale 2 (14 px glyphs) so it stays legible
+// at 512 px; split after "Jiji" (792 px / 766 px at gap 0, both < W - 24).
+// The seven region cards above are untouched.
+const SOURCES_SPLIT = SOURCES.indexOf(' · UN ReliefWeb');
+const SOURCES_LINE1 = SOURCES.slice(0, SOURCES_SPLIT);
+const SOURCES_LINE2 = SOURCES.slice(SOURCES_SPLIT + 3);
+drawTextCentered(SOURCES_LINE1, W / 2, 980, 2, INK, 0);
+drawTextCentered(SOURCES_LINE2, W / 2, 997, 2, INK, 0);
 
 /* ---------------- Guards: fail loudly instead of a broken poster ---------------- */
 
@@ -478,7 +483,7 @@ for (const region of REGIONS) {
     }
   }
 }
-if (textWidth(SOURCES, 1, footerGap) > W - 24) {
+if (textWidth(SOURCES_LINE1, 2, 0) > W - 24 || textWidth(SOURCES_LINE2, 2, 0) > W - 24) {
   throw new Error('sources footer line too wide');
 }
 
